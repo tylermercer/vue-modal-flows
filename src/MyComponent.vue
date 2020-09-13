@@ -1,6 +1,6 @@
 <template>
   <p class="foobar">
-  <button @click="another">Another!</button>
+  <button @click="another">Start Red Modal!</button>
   <button @click="cancel">Cancel</button>
   Modals within modals!
   </p>
@@ -14,7 +14,7 @@ import Component from 'vue-class-component'
 @Component({})
 export default class MyComponent extends Vue {
   another(): void {
-    this.$flows.start()
+    this.$flows.start('red')
   }
   cancel(): void {
     this.$emit('cancel-flow')
@@ -22,7 +22,7 @@ export default class MyComponent extends Vue {
 }
 </script>
 
-<style>
+<style scoped>
 .foobar {
   background-color: rgba(0,0,0,0.2);
   margin: 0;

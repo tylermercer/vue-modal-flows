@@ -5,6 +5,10 @@ const rootElementStyles = {
   position: 'relative'
 }
 
+const coveredStyles = {
+  visibility: 'hidden'
+}
+
 const modalStyles = {
   position: 'absolute',
   top: 0,
@@ -32,6 +36,10 @@ export class FlowsRoot extends Vue {
   }
 
   modals: VueConstructor[] = []
+
+  public shouldHide(index: number = -1) {
+    return this.$flows._hideCovered && this.modals.length > index + 1;
+  }
 }
 
 /*
@@ -42,11 +50,20 @@ export class FlowsRoot extends Vue {
 const VueFlowsRoot: (app: VueConstructor) => VueConstructor = (app) => {
   @Component<CFlowsRoot>({
     render(h) {
-      return h('div', { style: rootElementStyles }, [
-        h(app),
-        this.modals.map(
-          m => h(m, { style: modalStyles, on: { 'cancel-flow': this.cancel }}))
-      ])
+      return h('div',
+        { style: { rootElementStyles } },
+        [
+          h(app, { style: this.shouldHide() ? coveredStyles : {}}),
+          this.modals.map(
+            (m, i) => h(m,
+              {
+                style: this.shouldHide(i) ? coveredStyles : modalStyles,
+                on: { 'cancel-flow': this.cancel }
+              }
+            )
+          )
+        ]
+      )
     },
   })
   class CFlowsRoot extends FlowsRoot {};

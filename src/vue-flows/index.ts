@@ -1,6 +1,6 @@
 import { PluginObject, VueConstructor } from 'vue';
 import VueFlowsRoot from './flows-root';
-import Flows, { FlowsOptions } from './flows'
+import Flows, { FlowsOptions, Flow } from './flows'
 
 declare global {
   interface Window {
@@ -38,5 +38,6 @@ const VueFlows: PluginObject<any> = {
 
 export {
   VueFlows,
-  VueFlowsRoot
+  VueFlowsRoot,
+  Flow
 };
