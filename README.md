@@ -3,7 +3,7 @@ A Vue plugin for managing modal flows in Vue. Note that these flows are not nece
 
 ## Wait, couldn't I just use Vue Router?
 The advantage of using Flows over Vue Router is twofold:
-*  The application interface and state prior to launching the modal flow is preserved, and restored when the modal flow is cancelled or completed.
+* The application interface and state prior to launching the modal flow is preserved, and restored when the modal flow is cancelled or completed.
 * Flows can be started with a callback to be called when the flow is completed or cancelled. The `oncomplete` callback can receive a result from the modal flow.
 
 ## Usage
@@ -29,6 +29,8 @@ new Vue({
   render: h => h(VueFlowsRoot(App)),
 }).$mount('#app')
 ```
+
+**Important note** This library can be used in conjunction with Vue Router, but Vue Router must be configured to use [history mode](https://router.vuejs.org/guide/essentials/history-mode.html). This is because Vue Modal Flows uses the URL hash to represent what modal is currently open.
 
 ## Development
 ### Project setup
