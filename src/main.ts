@@ -1,11 +1,15 @@
 import Vue from 'vue'
 import App from './App.vue'
-import VueModalFlows from './plugins/vue-modal-flows'
+import { VueFlows, VueFlowsRoot } from './vue-flows'
+import flows from './custom-flows'
 
 Vue.config.productionTip = false
 
-Vue.use(VueModalFlows)
+Vue.use(VueFlows, {
+  hideCovered: false,
+  flows,
+})
 
 new Vue({
-  render: h => h(App),
+  render: h => h(VueFlowsRoot(App)),
 }).$mount('#app')

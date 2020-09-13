@@ -1,4 +1,6 @@
 import { PluginObject, VueConstructor } from 'vue';
+import VueFlowsRoot from './flows-root';
+import Flows, { FlowsOptions, Flow } from './flows'
 
 declare global {
   interface Window {
@@ -6,23 +8,16 @@ declare global {
   }
 }
 
-export class Flows {
-  public start() {
-    //TODO: implement
-    console.log("Foobar");
-  }
-}
-
 const version = '__VERSION__';
 
-const install = (Vue: any, options: any): void => {
+const install = (Vue: any, options: FlowsOptions): void => {
 
-  if (VueModalFlows.installed) {
+  if (VueFlows.installed) {
     return;
   }
-  VueModalFlows.installed = true;
+  VueFlows.installed = true;
 
-  const flows = new Flows();
+  const flows = new Flows(options);
 
   Vue.$flows = flows;
 
@@ -36,9 +31,13 @@ const install = (Vue: any, options: any): void => {
 
 };
 
-const VueModalFlows: PluginObject<any> = {
+const VueFlows: PluginObject<any> = {
   install,
   version,
 };
 
-export default VueModalFlows;
+export {
+  VueFlows,
+  VueFlowsRoot,
+  Flow
+};
