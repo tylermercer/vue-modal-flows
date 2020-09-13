@@ -1,6 +1,7 @@
 <template>
   <div id="app">
     <p>This is a vue-modal-flows test app</p>
+    <button @click="doTheThingZhuLi">Show Modal</button>
   </div>
 </template>
 
@@ -9,7 +10,7 @@ import { Component, Vue } from 'vue-property-decorator';
 
 @Component({})
 export default class App extends Vue {
-  public created() {
+  public doTheThingZhuLi() {
     this.$flows.start()
   }
 }

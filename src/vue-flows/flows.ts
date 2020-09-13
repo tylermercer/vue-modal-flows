@@ -1,4 +1,6 @@
-import { IFlowsRoot } from './flows-root';
+import { FlowsRoot } from './flows-root';
+
+import MyComponent from './MyComponent.vue';
 
 export type FlowsOptions = {
   hideCovered: boolean
@@ -16,11 +18,19 @@ export default class Flows {
     this.hideCovered = resOptions.hideCovered;
   }
 
+  private root: FlowsRoot | null = null;
+
   public start() {
     //TODO: implement
-    console.log("Foobar");
+    if (this.root == null) {
+      console.error("No root attached")
+    }
+    else {
+      this.root.start(MyComponent)
+    }
   }
-  public _attach(t: IFlowsRoot) {
-
+  public _attach(t: FlowsRoot) {
+    this.root = t;
+    console.log("Root attached");
   }
 }

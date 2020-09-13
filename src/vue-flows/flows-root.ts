@@ -1,44 +1,56 @@
 import { VueConstructor } from 'vue';
 import { Vue, Component } from 'vue-property-decorator';
 
-interface HigherOrderComponent {
-  (foo: VueConstructor): VueConstructor;
-}
-
 const rootElementStyles = {
   position: 'relative'
 }
 
-/*
-* This interface contains the methods used by the Flows Plugin
-* to create and control modals in the Flows root component
-*/
-export interface IFlowsRoot extends Vue {
-  start(): void;
+const modalStyles = {
+  position: 'absolute',
+  top: 0,
+  left: 0,
+  width: '100%',
+  height: '100%'
 }
 
-const VueFlowsRoot: HigherOrderComponent = (foo) => {
-  /*
-  * We create the component type dynamically so that the user
-  * can just replace 'h(App)' with 'h(VueFlowsRoot(App))'
+/*
+* This class contains the methods used by the Flows Plugin
+* to create and control modals in the Flows root component
+*/
+@Component<FlowsRoot>({
+  created() {
+    this.$flows._attach(this)
+  },
+})
+export class FlowsRoot extends Vue {
+  public start(modal: VueConstructor): void {
+    this.modals.push(modal)
+  }
+
+  public cancel(): void {
+    this.modals.pop()
+  }
+
+  modals: VueConstructor[] = []
+}
+
+/*
+  * This HOC creates a new concrete component type dynamically,
+  * so that we can define the render function to properly overlay
+  * the modals on top of the app
   */
-  @Component({
+const VueFlowsRoot: (app: VueConstructor) => VueConstructor = (app) => {
+  @Component<CFlowsRoot>({
     render(h) {
-      return h('div', { style: rootElementStyles}, [
-        h(foo),
-        //Modals go here....
+      return h('div', { style: rootElementStyles }, [
+        h(app),
+        this.modals.map(
+          m => h(m, { style: modalStyles, on: { 'cancel-flow': this.cancel }}))
       ])
     },
-    mounted() {
-      this.$flows._attach(this as IFlowsRoot)
-    },
   })
-  class FlowsRoot extends Vue implements IFlowsRoot {
-    public start(): void {
-
-    }
-  };
-  return FlowsRoot;
+  class CFlowsRoot extends FlowsRoot {};
+  return CFlowsRoot
 }
 
 export default VueFlowsRoot
