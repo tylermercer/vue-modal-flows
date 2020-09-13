@@ -59,7 +59,7 @@ export class FlowsRoot extends Vue {
 
   modals: VueConstructor[] = []
 
-  public shouldHide(index: number = -1) {
+  public shouldHide(index = -1) {
     return this.$flows._hideCovered && this.modals.length > index + 1;
   }
 }
@@ -88,7 +88,7 @@ const VueFlowsRoot: (app: VueConstructor) => VueConstructor = (app) => {
       )
     },
   })
-  class CFlowsRoot extends FlowsRoot {};
+  class CFlowsRoot extends FlowsRoot {}
   return CFlowsRoot
 }
 

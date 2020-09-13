@@ -2,6 +2,7 @@
   <div id="app">
     <p>This is a vue-modal-flows test app</p>
     <router-link to="/">Primary</router-link>
+    {{" "}}
     <router-link to="/secondary">Secondary</router-link>
     <router-view/>
   </div>

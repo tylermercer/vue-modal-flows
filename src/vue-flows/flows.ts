@@ -2,13 +2,13 @@ import { FlowsRoot } from './flows-root';
 import { VueConstructor } from 'vue'
 
 export type Flow<TPayload = any,TResult = any> = {
-  key: FlowKey<TPayload,TResult> | string,
-  component: VueConstructor
+  key: FlowKey<TPayload,TResult> | string;
+  component: VueConstructor;
 }
 
 export type FlowsOptions = {
-  hideCovered: boolean,
-  flows: Flow[]
+  hideCovered: boolean;
+  flows: Flow[];
 }
 
 const defaultOptions: FlowsOptions = {
@@ -43,7 +43,7 @@ export default class Flows {
       console.error("No root attached")
     }
     else {
-      let flow = this.flows.find(f => f.key === key);
+      const flow = this.flows.find(f => f.key === key);
       if (flow == null) {
         throw new Error("Unknown flow! " + key);
       }
