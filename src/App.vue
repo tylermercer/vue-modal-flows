@@ -1,7 +1,9 @@
 <template>
   <div id="app">
     <p>This is a vue-modal-flows test app</p>
-    <button @click="doTheThingZhuLi">Show Modal</button>
+    <router-link to="/">Primary</router-link>
+    <router-link to="/secondary">Secondary</router-link>
+    <router-view/>
   </div>
 </template>
 
