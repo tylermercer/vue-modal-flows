@@ -17,6 +17,7 @@ Vue.use(VueRouter);
 Vue.use(VueFlows, {
   hideCovered: false,
   flows,
+  hashPrefix: 'flow-'
 })
 
 new Vue({

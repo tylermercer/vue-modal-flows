@@ -1,8 +1,6 @@
 import { VueConstructor } from 'vue';
 import { Vue, Component } from 'vue-property-decorator';
 
-const MODAL_HASH_PREFIX = "#modal-";
-
 const rootElementStyles = {
   position: 'relative'
 }
@@ -26,10 +24,10 @@ const modalStyles = {
 @Component<FlowsRoot>({
   created() {
     this.$flows._attach(this);
-    if (window.location.hash.startsWith(MODAL_HASH_PREFIX)) {
+    if (window.location.hash.startsWith(this.$flows._hashPrefix)) {
       this.$flows.start(
         window.location.hash.substring(
-          MODAL_HASH_PREFIX.length
+          this.$flows._hashPrefix.length
         )
       )
     }
@@ -42,7 +40,7 @@ export class FlowsRoot extends Vue {
       {},
       "Modal",
       window.location.pathname +
-      MODAL_HASH_PREFIX + key
+      this.$flows._hashPrefix + key
     );
     window.onpopstate = () => {
       this.modals.pop();
