@@ -16,7 +16,9 @@ const defaultOptions: FlowsOptions = {
   flows: []
 }
 
-export class FlowKey<TPayload,TResult> {}
+export class FlowKey<TPayload,TResult> {
+  constructor(public value: string) {}
+}
 
 export default class Flows {
   public _hideCovered: boolean;
@@ -47,7 +49,7 @@ export default class Flows {
       }
       else {
         console.log("Starting: " + flow.key);
-        this.root.start(flow.component)
+        this.root.start(flow.component, typeof flow.key === 'string' ? flow.key : flow.key.value)
       }
     }
   }

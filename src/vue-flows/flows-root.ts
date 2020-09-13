@@ -27,8 +27,15 @@ const modalStyles = {
   },
 })
 export class FlowsRoot extends Vue {
-  public start(modal: VueConstructor): void {
+  public start(modal: VueConstructor, path: string): void {
     this.modals.push(modal)
+    window.history.pushState({}, "Modal", `#flow-${path}`);
+    window.onpopstate = () => {
+      this.cancel();
+      if (!this.modals.length) {
+        window.onpopstate = () => {}
+      }
+    }
   }
 
   public cancel(): void {
