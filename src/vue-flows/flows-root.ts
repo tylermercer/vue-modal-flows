@@ -31,7 +31,7 @@ export class FlowsRoot extends Vue {
     this.modals.push(modal)
     window.history.pushState({}, "Modal", `#flow-${path}`);
     window.onpopstate = () => {
-      this.cancel();
+      this.modals.pop();
       if (!this.modals.length) {
         window.onpopstate = () => {}
       }
@@ -39,7 +39,7 @@ export class FlowsRoot extends Vue {
   }
 
   public cancel(): void {
-    this.modals.pop()
+    window.history.back()
   }
 
   modals: VueConstructor[] = []
