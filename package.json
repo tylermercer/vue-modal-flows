@@ -3,7 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "main": "dist/index",
-  "types": "dist/vue-flows/index",
+  "types": "dist/index",
   "scripts": {
     "serve": "vue-cli-service serve ./src/demo/main.ts --port 3000",
     "build-rollup": "rollup -i ./src/plugin/index.ts --config ./rollup.config.js",
@@ -11,6 +11,9 @@
     "build-lib": "vue-cli-service build --target lib --name vue-modal-flows ./src/plugin/index.ts",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "./dist/*"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
