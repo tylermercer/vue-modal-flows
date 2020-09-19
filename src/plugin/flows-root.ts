@@ -31,10 +31,7 @@ export default Vue.extend({
     return h('div',
       { style: { rootElementStyles } },
       [
-        ...((this.$slots.default) ?
-        this.$slots.default.map(s => ({ style: this.shouldHide() ? coveredStyles : {}, ...s})) :
-        []),
-        // h('div', { style: this.shouldHide() ? coveredStyles : {}}, this.$slots.default),
+        h('div', { style: this.shouldHide() ? coveredStyles : {}}, this.$slots.default),
         ...this.modals!.map(
           (m:any, i:number) => h(m,
             {
