@@ -54,8 +54,10 @@ export class FlowsRoot extends Vue {
   }
 
   public mounted() {
+    //@ts-ignore
     if (this.$router) {
       //Reject route changes when modals are open
+      //@ts-ignore
       this.$router.beforeEach((_, __, next) => {
         if (this.modals.length > 0) {
           next(new Error("Vue Modal Flows: Route navigation out of modal is not allowed. Please cancel the modal(s) and then change route."));

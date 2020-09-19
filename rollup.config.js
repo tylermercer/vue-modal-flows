@@ -3,7 +3,7 @@ import cleaner from 'rollup-plugin-cleaner'
 import commonjs from '@rollup/plugin-commonjs'
 
 export default {
-  input: './src/vue-flows/index.ts',
+  input: './src/plugin/index.ts',
   output: {
     format: 'esm', // This is what tells rollup to use ES6 modules
     dir: 'dist'
