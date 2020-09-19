@@ -29,31 +29,15 @@ const modalStyles = {
 export class FlowsRoot extends Vue {
   public mounted() {
     if (this.$router) {
-      if (!this.$flows._laxMode) {
-        //Reject route changes when modals are open
-        this.$router.beforeEach((_, __, next) => {
-          if (this.modals.length > 0) {
-            next(new Error("Vue Modal Flows: Route navigation out of modal not allowed in strict mode"));
-          }
-          else {
-            next();
-          }
-        });
-      }
-      else {
-        //Close open modals and unwind history
-        this.$router.beforeEach((_, __, next) => {
-          while (this.modals.length > 0) {
-            let num = this.modals.length;
-            window.history.back();
-            if (this.modals.length === num) {
-              //History popstate listener was overwritten, must pop modal manually
-              this.modals.pop();
-            }
-          }
-          next()
-        });
-      }
+      //Reject route changes when modals are open
+      this.$router.beforeEach((_, __, next) => {
+        if (this.modals.length > 0) {
+          next(new Error("Vue Modal Flows: Route navigation out of modal is not allowed. Please cancel the modal(s) and then change route."));
+        }
+        else {
+          next();
+        }
+      });
     }
   }
   public start(modal: VueConstructor, key: string): void {
