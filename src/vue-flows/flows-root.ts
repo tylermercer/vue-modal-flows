@@ -1,6 +1,12 @@
 import { VueConstructor, CreateElement, VNode } from 'vue';
 import { Vue, Component } from 'vue-property-decorator';
 
+class KeyedModal {
+  constructor(
+    public key: string,
+    public flow: VueConstructor){}
+}
+
 const rootElementStyles = {
   position: 'relative'
 }
@@ -28,7 +34,7 @@ const modalStyles = {
 })
 export class FlowsRoot extends Vue {
 
-  modals: VueConstructor[] = []
+  modals: KeyedModal[] = []
 
   public renderModals(h: CreateElement, app: VueConstructor): VNode {
     return h('div',
@@ -36,7 +42,7 @@ export class FlowsRoot extends Vue {
       [
         h(app, { style: this.shouldHide() ? coveredStyles : undefined}),
         this.modals.map(
-          (m, i) => h(m,
+          (m, i) => h(m.flow,
             {
               style: this.shouldHide(i) ? coveredStyles : modalStyles,
               on: { 'cancel-flow': this.cancel }
@@ -61,13 +67,23 @@ export class FlowsRoot extends Vue {
     }
   }
   public start(modal: VueConstructor, key: string): void {
-    this.modals.push(modal)
+    const flowKey = key + this.modals.length;
+    this.modals.push(
+      new KeyedModal(flowKey, modal)
+      )
     window.history.pushState(
-      {flowsKey: key},
-      "Modal"
+      { flowKey },
+      ''
     );
-    window.onpopstate = () => {
-      this.modals.pop();
+    window.onpopstate = ({ state } : any) => {
+      console.log(state);
+      if (state == null) {
+        this.modals = [];
+      }
+      else {
+        const newTop = this.modals.findIndex(i => i.key === state.flowKey);
+        this.modals = this.modals.slice(0, newTop + 1);
+      }
       if (!this.modals.length) {
         window.onpopstate = () => {}
       }
