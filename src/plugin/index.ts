@@ -29,5 +29,6 @@ declare module 'vue/types/vue' {
 export {
   VueFlows,
   FlowsRoot,
-  Flow
+  Flow,
+  Flows
 };
