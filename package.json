@@ -6,9 +6,8 @@
   "types": "dist/index",
   "scripts": {
     "serve": "vue-cli-service serve ./src/demo/main.ts --port 3000",
-    "build-rollup": "rollup -i ./src/plugin/index.ts --config ./rollup.config.js",
-    "build": "vue-cli-service build ./src/demo/main.ts",
-    "build-lib": "vue-cli-service build --target lib --name vue-modal-flows ./src/plugin/index.ts",
+    "build": "rollup -i ./src/plugin/index.ts --config ./rollup.config.js",
+    "build-demo": "vue-cli-service build --dest ./dist-app/ ./src/demo/main.ts",
     "lint": "vue-cli-service lint"
   },
   "files": [
