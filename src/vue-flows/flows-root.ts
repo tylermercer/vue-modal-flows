@@ -91,7 +91,12 @@ export class FlowsRoot extends Vue {
   }
 
   public cancel(): void {
-    window.history.back()
+    const topKey = this.modals[this.modals.length - 1].key;
+    window.history.back();
+    if (this.modals[this.modals.length - 1].key !== topKey) {
+      //onpopstate handler wasn't called because we ran out of history
+      this.modals.pop();
+    }
   }
 
   public shouldHide(index = -1) {
