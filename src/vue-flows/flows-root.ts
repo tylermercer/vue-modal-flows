@@ -1,4 +1,4 @@
-import { VueConstructor } from 'vue';
+import { VueConstructor, CreateElement, VNode } from 'vue';
 import { Vue, Component } from 'vue-property-decorator';
 
 const rootElementStyles = {
@@ -27,6 +27,26 @@ const modalStyles = {
   },
 })
 export class FlowsRoot extends Vue {
+
+  modals: VueConstructor[] = []
+
+  public renderModals(h: CreateElement, app: VueConstructor): VNode {
+    return h('div',
+      { style: { rootElementStyles } },
+      [
+        h(app, { style: this.shouldHide() ? coveredStyles : undefined}),
+        this.modals.map(
+          (m, i) => h(m,
+            {
+              style: this.shouldHide(i) ? coveredStyles : modalStyles,
+              on: { 'cancel-flow': this.cancel }
+            }
+          )
+        )
+      ]
+    );
+  }
+
   public mounted() {
     if (this.$router) {
       //Reject route changes when modals are open
@@ -58,8 +78,6 @@ export class FlowsRoot extends Vue {
     window.history.back()
   }
 
-  modals: VueConstructor[] = []
-
   public shouldHide(index = -1) {
     return this.$flows._hideCovered && this.modals.length > index + 1;
   }
@@ -73,20 +91,7 @@ export class FlowsRoot extends Vue {
 const VueFlowsRoot: (app: VueConstructor) => VueConstructor = (app) => {
   @Component<CFlowsRoot>({
     render(h) {
-      return h('div',
-        { style: { rootElementStyles } },
-        [
-          h(app, { style: this.shouldHide() ? coveredStyles : {}}),
-          this.modals.map(
-            (m, i) => h(m,
-              {
-                style: this.shouldHide(i) ? coveredStyles : modalStyles,
-                on: { 'cancel-flow': this.cancel }
-              }
-            )
-          )
-        ]
-      )
+      return this.renderModals(h, app);
     },
   })
   class CFlowsRoot extends FlowsRoot {}
