@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
-import { VueFlows, VueFlowsRoot } from '../vue-flows'
+import { VueFlows, VueFlowsRoot } from '../plugin'
 import flows from './custom-flows'
 import routes from './routes'
 

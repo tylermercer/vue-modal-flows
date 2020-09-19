@@ -19,7 +19,7 @@ const install = (Vue: any, options: FlowsOptions): void => {
 
   const flows = new Flows(options);
 
-  Vue.$flows = flows;
+  Vue.prototype.$flows = flows;
 
   Object.defineProperties(Vue.prototype, {
     $flows: {
@@ -35,6 +35,17 @@ const VueFlows: PluginObject<any> = {
   install,
   version,
 };
+
+declare module 'vue/types/vue' {
+  interface Vue {
+    $flows: Flows;
+  }
+}
+declare module 'vue-property-decorator' {
+  interface Vue {
+    $flows: Flows;
+  }
+}
 
 export {
   VueFlows,
