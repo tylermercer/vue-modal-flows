@@ -6,7 +6,7 @@ const rootElementStyles = {
 }
 
 const coveredStyles = {
-  visibility: 'hidden'
+  display: 'none'
 }
 
 const modalStyles = {
