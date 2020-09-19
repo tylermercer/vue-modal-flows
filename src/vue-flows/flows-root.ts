@@ -24,28 +24,18 @@ const modalStyles = {
 @Component<FlowsRoot>({
   created() {
     this.$flows._attach(this);
-    if (window.location.hash.startsWith(this.$flows._hashPrefix)) {
-      this.$flows.start(
-        window.location.hash.substring(
-          this.$flows._hashPrefix.length
-        )
-      )
-    }
   },
 })
 export class FlowsRoot extends Vue {
   public start(modal: VueConstructor, key: string): void {
     this.modals.push(modal)
     window.history.pushState(
-      {},
-      "Modal",
-      window.location.pathname +
-      this.$flows._hashPrefix + key
+      {flowsKey: key},
+      "Modal"
     );
     window.onpopstate = () => {
       this.modals.pop();
       if (!this.modals.length) {
-        history.pushState('', document.title, window.location.pathname);
         window.onpopstate = () => {}
       }
     }

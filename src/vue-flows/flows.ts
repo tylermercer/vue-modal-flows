@@ -9,13 +9,11 @@ export type Flow<TPayload = any,TResult = any> = {
 export type FlowsOptions = {
   hideCovered: boolean;
   flows: Flow[];
-  hashPrefix: string;
 }
 
 const defaultOptions: FlowsOptions = {
   hideCovered: true,
-  flows: [],
-  hashPrefix: "modal-"
+  flows: []
 }
 
 export class FlowKey<TPayload,TResult> {
@@ -24,13 +22,11 @@ export class FlowKey<TPayload,TResult> {
 
 export default class Flows {
   public _hideCovered: boolean;
-  public _hashPrefix: string;
   private flows: Flow[];
 
   constructor(options: FlowsOptions) {
     const resOptions = { ...defaultOptions, ...options };
     this._hideCovered = resOptions.hideCovered;
-    this._hashPrefix = `#${resOptions.hashPrefix}`;
     this.flows = resOptions.flows;
     console.log(this.flows);
   }
