@@ -1,5 +1,4 @@
-import { VueConstructor, CreateElement, VNode } from 'vue';
-import { Vue, Component } from 'vue-property-decorator';
+import Vue, { VueConstructor, CreateElement, VNode } from 'vue';
 
 class KeyedModal {
   constructor(
@@ -27,22 +26,17 @@ const modalStyles = {
 * This class contains the methods used by the Flows Plugin
 * to create and control modals in the Flows root component
 */
-@Component<FlowsRoot>({
-  created() {
-    this.$flows._attach(this);
-  },
-})
-export class FlowsRoot extends Vue {
-
-  modals: KeyedModal[] = []
-
-  public renderModals(h: CreateElement, app: VueConstructor): VNode {
+export default Vue.extend({
+  render(h: CreateElement): VNode {
     return h('div',
       { style: { rootElementStyles } },
       [
-        h(app, { style: this.shouldHide() ? coveredStyles : undefined}),
-        this.modals.map(
-          (m, i) => h(m.flow,
+        ...((this.$slots.default) ?
+        this.$slots.default.map(s => ({ style: this.shouldHide() ? coveredStyles : {}, ...s})) :
+        []),
+        // h('div', { style: this.shouldHide() ? coveredStyles : {}}, this.$slots.default),
+        ...this.modals!.map(
+          (m:any, i:number) => h(m,
             {
               style: this.shouldHide(i) ? coveredStyles : modalStyles,
               on: { 'cancel-flow': this.cancel }
@@ -50,10 +44,12 @@ export class FlowsRoot extends Vue {
           )
         )
       ]
-    );
-  }
-
-  public mounted() {
+    )
+  },
+  created() {
+    this.$flows._attach(this);
+  },
+  mounted() {
     //@ts-ignore
     if (this.$router) {
       //Reject route changes when modals are open
@@ -67,58 +63,31 @@ export class FlowsRoot extends Vue {
         }
       });
     }
-  }
-  public start(modal: VueConstructor, key: string): void {
-    const flowKey = key + this.modals.length;
-    this.modals.push(
-      new KeyedModal(flowKey, modal)
-      )
-    window.history.pushState(
-      { flowKey },
-      ''
-    );
-    window.onpopstate = ({ state } : any) => {
-      console.log(state);
-      if (state == null) {
-        this.modals = [];
+  },
+  methods: {
+    start(modal: VueConstructor, key: string): void {
+      this.modals.push(modal)
+      window.history.pushState(
+        {flowsKey: key},
+        "Modal"
+      );
+      window.onpopstate = () => {
+        this.modals.pop();
+        if (!this.modals.length) {
+          window.onpopstate = () => {}
+        }
       }
-      else {
-        const newTop = this.modals.findIndex(i => i.key === state.flowKey);
-        this.modals = this.modals.slice(0, newTop + 1);
-      }
-      if (!this.modals.length) {
-        window.onpopstate = () => {}
-      }
-    }
-  }
-
-  public cancel(): void {
-    const topKey = this.modals[this.modals.length - 1].key;
-    window.history.back();
-    if (this.modals[this.modals.length - 1].key !== topKey) {
-      //onpopstate handler wasn't called because we ran out of history
-      this.modals.pop();
-    }
-  }
-
-  public shouldHide(index = -1) {
-    return this.$flows._hideCovered && this.modals.length > index + 1;
-  }
-}
-
-/*
-  * This HOC creates a new concrete component type dynamically,
-  * so that we can define the render function to properly overlay
-  * the modals on top of the app
-  */
-const VueFlowsRoot: (app: VueConstructor) => VueConstructor = (app) => {
-  @Component<CFlowsRoot>({
-    render(h) {
-      return this.renderModals(h, app);
     },
-  })
-  class CFlowsRoot extends FlowsRoot {}
-  return CFlowsRoot
-}
-
-export default VueFlowsRoot
+    cancel(): void {
+      window.history.back()
+    },
+    shouldHide(index = -1): boolean {
+      return this.$flows._hideCovered && this.modals.length > index + 1;
+    }
+  },
+  data: () => {
+    return {
+      modals: [] as VueConstructor[],
+    }
+  }
+});

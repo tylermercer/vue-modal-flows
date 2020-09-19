@@ -1,17 +1,22 @@
 <template>
-  <div id="app">
+  <FlowsRoot id="app">
     <p>This is a vue-modal-flows test app</p>
     <router-link to="/">Primary</router-link>
     {{" "}}
     <router-link to="/secondary">Secondary</router-link>
     <router-view/>
-  </div>
+  </FlowsRoot>
 </template>
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
+import { FlowsRoot } from '../plugin'
 
-@Component({})
+@Component({
+  components: {
+    FlowsRoot
+  }
+})
 export default class App extends Vue {
   public doTheThingZhuLi() {
     this.$flows.start('black')

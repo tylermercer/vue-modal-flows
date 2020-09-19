@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import VueRouter from 'vue-router'
 import App from './App.vue'
-import { VueFlows, VueFlowsRoot } from '../plugin'
+import { VueFlows } from '../plugin'
 import flows from './custom-flows'
 import routes from './routes'
 
@@ -21,5 +21,5 @@ Vue.use(VueFlows, {
 
 new Vue({
   router,
-  render: h => h(VueFlowsRoot(App)),
+  render: h => h(App),
 }).$mount('#app')

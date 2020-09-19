@@ -1,4 +1,4 @@
-import { Flow } from '../vue-flows'
+import { Flow } from '../plugin'
 import MyComponent from './MyComponent.vue'
 import MyRedComponent from './MyRedComponent.vue'
 
