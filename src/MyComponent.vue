@@ -2,6 +2,7 @@
   <p class="foobar">
   <button @click="another">Start Red Modal!</button>
   <button @click="cancel">Cancel</button>
+  <router-link to="/secondary">Try to change route</router-link>
   Modals within modals!
   </p>
 </template>

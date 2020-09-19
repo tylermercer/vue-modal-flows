@@ -2,13 +2,13 @@ import { FlowsRoot } from './flows-root';
 import { VueConstructor } from 'vue'
 
 export type Flow<TPayload = any,TResult = any> = {
-  key: FlowKey<TPayload,TResult> | string,
-  component: VueConstructor
+  key: FlowKey<TPayload,TResult> | string;
+  component: VueConstructor;
 }
 
 export type FlowsOptions = {
-  hideCovered: boolean,
-  flows: Flow[]
+  hideCovered: boolean;
+  flows: Flow[];
 }
 
 const defaultOptions: FlowsOptions = {
@@ -16,11 +16,14 @@ const defaultOptions: FlowsOptions = {
   flows: []
 }
 
-export class FlowKey<TPayload,TResult> {}
+export class FlowKey<TPayload,TResult> {
+  constructor(public value: string) {}
+}
 
 export default class Flows {
   public _hideCovered: boolean;
   private flows: Flow[];
+  private root: FlowsRoot | null = null;
 
   constructor(options: FlowsOptions) {
     const resOptions = { ...defaultOptions, ...options };
@@ -29,7 +32,6 @@ export default class Flows {
     console.log(this.flows);
   }
 
-  private root: FlowsRoot | null = null;
 
   public start<TPayload,TResult>(
       key: FlowKey<TPayload,TResult> | string,
@@ -41,13 +43,13 @@ export default class Flows {
       console.error("No root attached")
     }
     else {
-      let flow = this.flows.find(f => f.key === key);
+      const flow = this.flows.find(f => f.key === key);
       if (flow == null) {
         throw new Error("Unknown flow! " + key);
       }
       else {
         console.log("Starting: " + flow.key);
-        this.root.start(flow.component)
+        this.root.start(flow.component, typeof flow.key === 'string' ? flow.key : flow.key.value)
       }
     }
   }
