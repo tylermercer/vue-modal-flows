@@ -7,7 +7,7 @@
   "scripts": {
     "serve": "vue-cli-service serve ./src/demo/main.ts --port 3000",
     "build-rollup": "rollup -i ./src/plugin/index.ts --config ./rollup.config.js",
-    "build": "vue-cli-service build",
+    "build": "vue-cli-service build ./src/demo/main.ts",
     "build-lib": "vue-cli-service build --target lib --name vue-modal-flows ./src/plugin/index.ts",
     "lint": "vue-cli-service lint"
   },
