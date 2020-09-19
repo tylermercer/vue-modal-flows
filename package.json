@@ -2,20 +2,26 @@
   "name": "vue-modal-flows",
   "version": "0.1.0",
   "private": true,
+  "main": "dist/index",
+  "types": "dist/index",
   "scripts": {
-    "serve": "vue-cli-service serve --port 3000",
-    "build": "vue-cli-service build",
-    "build-lib": "vue-cli-service build --target lib --name vue-modal-flows ./src/plugins/vue-modal-flows.ts",
+    "serve": "vue-cli-service serve ./src/demo/main.ts --port 3000",
+    "build": "rollup -i ./src/plugin/index.ts --config ./rollup.config.js",
+    "build-demo": "vue-cli-service build --dest ./dist-app/ ./src/demo/main.ts",
     "lint": "vue-cli-service lint"
   },
+  "files": [
+    "./dist/*"
+  ],
   "dependencies": {
     "core-js": "^3.6.5",
     "vue": "^2.6.11",
     "vue-class-component": "^7.2.3",
-    "vue-property-decorator": "^8.4.2",
-    "vue-router": "^3.4.3"
+    "vue-property-decorator": "^8.4.2"
   },
   "devDependencies": {
+    "@betit/rollup-plugin-rename-extensions": "^0.1.0",
+    "@rollup/plugin-commonjs": "^15.0.0",
     "@typescript-eslint/eslint-plugin": "^2.33.0",
     "@typescript-eslint/parser": "^2.33.0",
     "@vue/cli-plugin-babel": "~4.5.0",
@@ -24,9 +30,14 @@
     "@vue/cli-plugin-typescript": "~4.5.0",
     "@vue/cli-service": "~4.5.0",
     "@vue/eslint-config-typescript": "^5.0.2",
+    "declaration-bundler-webpack-plugin": "^1.0.3",
     "eslint": "^6.7.2",
     "eslint-plugin-vue": "^6.2.2",
+    "rollup": "^2.27.1",
+    "rollup-plugin-cleaner": "^1.0.0",
+    "rollup-plugin-typescript2": "^0.27.2",
     "typescript": "~3.9.3",
+    "vue-router": "^3.4.3",
     "vue-template-compiler": "^2.6.11"
   }
 }

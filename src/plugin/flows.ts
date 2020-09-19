@@ -1,5 +1,5 @@
-import { FlowsRoot } from './flows-root';
-import { VueConstructor } from 'vue'
+import FlowsRoot, { IFlowsRoot } from './flows-root';
+import { VueConstructor } from 'vue';
 
 export type Flow<TPayload = any,TResult = any> = {
   key: FlowKey<TPayload,TResult> | string;
@@ -23,7 +23,7 @@ export class FlowKey<TPayload,TResult> {
 export default class Flows {
   public _hideCovered: boolean;
   private flows: Flow[];
-  private root: FlowsRoot | null = null;
+  private root?: IFlowsRoot;
 
   constructor(options: FlowsOptions) {
     const resOptions = { ...defaultOptions, ...options };
@@ -49,11 +49,12 @@ export default class Flows {
       }
       else {
         console.log("Starting: " + flow.key);
-        this.root.start(flow.component, typeof flow.key === 'string' ? flow.key : flow.key.value)
+        //@ts-ignore
+        this.root!.start(flow.component, typeof flow.key === 'string' ? flow.key : flow.key.value)
       }
     }
   }
-  public _attach(t: FlowsRoot) {
+  public _attach(t: IFlowsRoot) {
     this.root = t;
     console.log("Root attached");
   }

@@ -11,7 +11,8 @@
     "esModuleInterop": true,
     "allowSyntheticDefaultImports": true,
     "sourceMap": true,
-    "baseUrl": ".",
+    "baseUrl": "./vue-flows",
+    "declaration": true,
     "types": [
       "webpack-env"
     ],
@@ -25,6 +26,9 @@
       "dom",
       "dom.iterable",
       "scripthost"
+    ],
+    "typeRoots": [
+      "src/plugin/*"
     ]
   },
   "include": [
@@ -35,6 +39,7 @@
     "tests/**/*.tsx"
   ],
   "exclude": [
-    "node_modules"
+    "node_modules",
+    "src/demo/*"
   ]
 }
