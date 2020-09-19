@@ -8,11 +8,13 @@ export type Flow<TPayload = any,TResult = any> = {
 
 export type FlowsOptions = {
   hideCovered: boolean;
+  laxMode: boolean;
   flows: Flow[];
 }
 
 const defaultOptions: FlowsOptions = {
   hideCovered: true,
+  laxMode: false,
   flows: []
 }
 
@@ -23,15 +25,17 @@ export class FlowKey<TPayload,TResult> {
 export default class Flows {
   public _hideCovered: boolean;
   private flows: Flow[];
+  private root: FlowsRoot | null = null;
+  public _laxMode: boolean;
 
   constructor(options: FlowsOptions) {
     const resOptions = { ...defaultOptions, ...options };
     this._hideCovered = resOptions.hideCovered;
+    this._laxMode = resOptions.laxMode;
     this.flows = resOptions.flows;
     console.log(this.flows);
   }
 
-  private root: FlowsRoot | null = null;
 
   public start<TPayload,TResult>(
       key: FlowKey<TPayload,TResult> | string,
