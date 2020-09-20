@@ -44,7 +44,7 @@ const modalStyles = {
 */
 export interface IFlowsRoot extends Vue {
   $flows: Flows;
-  modals: VueConstructor[];
+  modals: KeyedModal[];
   shouldHide: (n?: number) => boolean;
   cancel: () => void;
 }
@@ -55,7 +55,7 @@ export default {
       [
         h('div', { style: (this as IFlowsRoot).shouldHide() ? coveredStyles : {}}, (this as IFlowsRoot).$slots.default),
         ...(this as IFlowsRoot).modals!.map(
-          (m:any, i:number) => h(m,
+          (m:KeyedModal, i:number) => h(m.flow,
             {
               style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
               on: { 'cancel-flow': (this as IFlowsRoot).cancel }
@@ -85,14 +85,23 @@ export default {
   },
   methods: {
     start(modal: VueConstructor, key: string): void {
-      //@ts-ignore
-      this.modals.push(modal)
+      const flowKey = key + this.modals.length;
+      this.modals.push(
+        new KeyedModal(flowKey, modal)
+        )
       window.history.pushState(
-        {flowsKey: key},
-        "Modal"
+        { flowKey },
+        ''
       );
-      window.onpopstate = () => {
-        this.modals.pop();
+      window.onpopstate = ({ state } : any) => {
+        console.log(state);
+        if (state == null) {
+          this.modals = [];
+        }
+        else {
+          const newTop = this.modals.findIndex(i => i.key === state.flowKey);
+          this.modals = this.modals.slice(0, newTop + 1);
+        }
         if (!this.modals.length) {
           window.onpopstate = () => {}
         }
