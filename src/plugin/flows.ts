@@ -17,9 +17,18 @@ const defaultOptions: FlowsOptions = {
 }
 
 export class FlowKey<TPayload=never,TResult=never,TCancelReason=never> {
-  constructor(public label: string) {
-    return { label }
-  }
+  /*
+   * These three data members exist so that using the wrong
+   * handler types when invoking a flow will cause
+   * typechecking errors. (Unfortunately, the error is
+   * placed on the key, not on the handler, but it's
+   * better than nothing.)
+   */
+  private unusedPayload?: TPayload
+  private unusedResult?: TResult
+  private unusedCancelReason?: TCancelReason
+
+  constructor(public label: string) {}
 }
 
 export default class Flows {
