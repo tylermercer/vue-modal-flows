@@ -22,7 +22,6 @@ export default class Primary extends Vue {
   value = 7;
 
   public doTheThingZhuLi() {
-    console.log(blackKey);
     this.$flows.start(
       blackKey,
       this.value,
