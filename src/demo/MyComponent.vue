@@ -1,10 +1,19 @@
 <template>
-  <p class="foobar">
-  <button @click="another">Start Red Modal!</button>
-  <button @click="cancel">Cancel</button>
-  <router-link to="/secondary">Try to change route</router-link>
-  Modals within modals!
-  </p>
+  <section>
+    <h1>Multiply</h1>
+    <p>
+      Multiply {{payload}} by
+      <input type="number"
+             placeholder="Type a number"
+             v-model="multiplier"/>
+    </p>
+    <p>
+      <button @click="confirm">Multiply</button>
+      <button @click="another">Start Red Modal!</button>
+      <button @click="cancel">Cancel</button>
+      Modals within modals!
+    </p>
+  </section>
 </template>
 
 <script lang="ts">
@@ -18,6 +27,8 @@ export default class MyComponent extends Vue {
   @Prop()
   public payload?: number;
 
+  multiplier = 1;
+
   public created() {
     console.log(this.payload);
   }
@@ -26,14 +37,17 @@ export default class MyComponent extends Vue {
     this.$flows.start('red')
   }
   cancel(): void {
-    this.$emit('complete-flow', this.payload! * 7)
+    this.$emit('cancel-flow')
+  }
+  confirm(): void {
+    this.$emit('complete-flow', this.multiplier * this.payload!);
   }
 }
 </script>
 
 <style scoped>
-.foobar {
-  background-color: rgba(0,0,0,0.2);
+section {
+  background-color: rgba(255,255,255,0.8);
   margin: 0;
 }
 </style>
