@@ -1,6 +1,6 @@
 <template>
   <p class="foobar">
-  <button @click="another">Start Multiply Modal</button>
+  <button @click="another">Start Multiply Flow</button>
   <button @click="cancel">Cancel</button>
   Modals within modals!
   </p>
@@ -9,13 +9,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { blackKey } from './custom-flows'
+import { multiplyKey } from './custom-flows'
 
 // The @Component decorator indicates the class is a Vue component
 @Component({})
-export default class MyRedComponent extends Vue {
+export default class RedFlow extends Vue {
   another(): void {
-    this.$flows.start(blackKey)
+    this.$flows.start(multiplyKey)
   }
   cancel(): void {
     this.$emit('close-flow')
