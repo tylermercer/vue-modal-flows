@@ -10,7 +10,7 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-property-decorator';
-import { FlowsRoot } from '../plugin'
+import { FlowsRoot } from '../plugin';
 
 @Component({
   components: {
@@ -18,9 +18,6 @@ import { FlowsRoot } from '../plugin'
   }
 })
 export default class App extends Vue {
-  public doTheThingZhuLi() {
-    this.$flows.start('black')
-  }
 }
 </script>
 

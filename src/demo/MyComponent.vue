@@ -10,15 +10,23 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import {Prop} from 'vue-property-decorator'
 
 // The @Component decorator indicates the class is a Vue component
 @Component({})
 export default class MyComponent extends Vue {
+  @Prop()
+  public payload?: number;
+
+  public created() {
+    console.log(this.payload);
+  }
+
   another(): void {
     this.$flows.start('red')
   }
   cancel(): void {
-    this.$emit('cancel-flow')
+    this.$emit('complete-flow', this.payload! * 7)
   }
 }
 </script>
