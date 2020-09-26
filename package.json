@@ -1,6 +1,6 @@
 {
   "name": "vue-modal-flows",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "main": "dist/index",
   "types": "dist/index",
   "scripts": {
@@ -10,7 +10,7 @@
     "lint": "vue-cli-service lint"
   },
   "files": [
-    "./dist/*"
+    "dist"
   ],
   "dependencies": {
     "core-js": "^3.6.5",
