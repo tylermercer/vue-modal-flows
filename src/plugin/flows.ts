@@ -1,4 +1,4 @@
-import FlowsRoot, { IFlowsRoot } from './flows-root';
+import { IFlowsRoot } from './flows-root';
 import { VueConstructor } from 'vue';
 
 export type Flow<TPayload = any,TResult = any> = {
