@@ -91,6 +91,7 @@ export default {
     )
   },
   created() {
+    window.history.replaceState({ flowKey: null }, '');
     (this as IFlowsRoot).$flows._attach(this as IFlowsRoot);
   },
   mounted() {
@@ -124,8 +125,12 @@ export default {
         { flowKey },
         ''
       );
-      window.onpopstate = ({ state } : any) => {
-        if (state == null) {
+      window.onpopstate = (event : any) => {
+        const { state } = event;
+        if (state.flowKey == null) {
+          this.modals.forEach(m => {
+            if (m.focusTrap) m.focusTrap.deactivate()
+          });
           this.modals = [];
         }
         else {
