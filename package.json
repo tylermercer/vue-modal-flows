@@ -39,5 +39,6 @@
     "typescript": "~3.9.3",
     "vue-router": "^3.4.3",
     "vue-template-compiler": "^2.6.11"
-  }
+  },
+  "license": "MIT"
 }
