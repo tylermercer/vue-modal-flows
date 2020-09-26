@@ -140,6 +140,7 @@ export default {
                 console.log("No focus trap");
               }
               debugger;
+              //Foobar
             });
 
           this.modals = this.modals.slice(0, newTop + 1);
