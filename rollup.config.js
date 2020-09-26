@@ -8,7 +8,7 @@ export default {
     format: 'esm', // This is what tells rollup to use ES6 modules
     dir: 'dist'
   },
-  external: [ 'vue', 'vue-class-component', 'vue-property-decorator' ],
+  external: [ 'vue', 'vue-class-component', 'vue-property-decorator', 'focus-trap' ],
   plugins: [
     cleaner({ targets: [ 'dist' ] }),
     commonjs(),
