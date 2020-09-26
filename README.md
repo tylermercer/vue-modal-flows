@@ -3,20 +3,26 @@ A Vue plugin for managing modal flows in Vue. Note that these flows are not nece
 
 ## Usage
 
+### Setup
+
 ```js
 const flows = [
   {
+    key: 'example-flow-key'
+    component: ExampleFlow
+  },
+  {
     key: 'add-tag',
-    component: AddTagModal
+    component: AddTagFlow
   },
   {
     key: 'edit-post',
-    component: EditPostModal
+    component: EditPostFlow
   }
 ]
 
 Vue.use(VueFlows, {
-  hideCovered: false, //This determines whether the old UI is hidden while the modal is active. Set to true for full-screen modals
+  hideCovered: false, //This determines whether the old UI is hidden while the flow is active. Default is true
   flows,
 })
 
@@ -35,6 +41,46 @@ the window history in that case (i.e. allowing the user to
 return back to the modal after navigating away) is more
 complexity than I felt it was worth. This may change in the
 future.
+
+### Flows
+
+Flows are just Vue components. They may optionally do any
+of the following:
+* Expose a `payload` prop to take info from the flow callee.
+* Emit a `'complete-flow'` event to indicate that the flow
+is complete and should close. This event can take a value
+(the flow result) that is passed to the callee via a
+callback.
+* Emit a `'cancel-flow'` event to indicate that the flow
+has been cancelled and should close. This event can take a
+value (the cancellation reason) that is passed to the
+callee via a callback.
+
+### Starting a flow
+
+Starting a flow is as simple as invoking `$flows.start`.
+The method accepts the flow key, an optional payload, and
+optional onComplete and onCancel callbacks.
+
+For example:
+
+```
+//Inside component's method block
+exampleFunction() {
+  this.$flows.start(
+    'example-flow-key',
+    { 'this is': 'a payload' },
+    this.handleResult,
+    this.handleCancel
+  )
+},
+handleResult(result) {
+  //Do something
+},
+handleCancel(reason) {
+  //Do something else
+}
+```
 
 ## Q & A
 ### Couldn't I just use Vue Router to do this?
