@@ -1,10 +1,12 @@
-import { Flow } from '../plugin'
+import { Flow, FlowKey } from '../plugin'
 import MyComponent from './MyComponent.vue'
 import MyRedComponent from './MyRedComponent.vue'
 
+export const blackKey = new FlowKey<number,number>('black');
+
 const flows: Flow[] = [
   {
-    key: 'black',
+    key: blackKey,
     component: MyComponent
   },
   {

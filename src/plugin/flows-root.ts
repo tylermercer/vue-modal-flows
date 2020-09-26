@@ -4,7 +4,11 @@ import Flows from './Flows'
 class KeyedModal {
   constructor(
     public key: string,
-    public flow: VueConstructor){}
+    public flow: VueConstructor,
+    public payload: any,
+    public onComplete: (result: any) => void,
+    public onCancel: (result: any) => void
+  ){}
 }
 
 const rootElementStyles = {
@@ -46,19 +50,33 @@ export interface IFlowsRoot extends Vue {
   $flows: Flows;
   modals: KeyedModal[];
   shouldHide: (n?: number) => boolean;
-  cancel: () => void;
+  cancel: (reason: any, callback: (reason: any) => void) => void;
+  complete: (result: any, callback: (reason: any) => void) => void;
 }
 export default {
   render(h: CreateElement): VNode {
     return h('div',
       { style: { rootElementStyles } },
       [
-        h('div', { style: (this as IFlowsRoot).shouldHide() ? coveredStyles : {}}, (this as IFlowsRoot).$slots.default),
+        h(
+          'div',
+          { style: (this as IFlowsRoot).shouldHide() ?
+            coveredStyles :
+            {}
+          },
+          (this as IFlowsRoot).$slots.default
+        ),
         ...(this as IFlowsRoot).modals!.map(
           (m:KeyedModal, i:number) => h(m.flow,
             {
               style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
-              on: { 'cancel-flow': (this as IFlowsRoot).cancel }
+              on: {
+                'cancel-flow': (reason: any) => (this as IFlowsRoot).cancel(reason, m.onCancel),
+                'complete-flow': (result: any) => (this as IFlowsRoot).complete(result, m.onComplete)
+              },
+              props: {
+                payload: m.payload
+              }
             }
           )
         )
@@ -84,17 +102,22 @@ export default {
     }
   },
   methods: {
-    start(modal: VueConstructor, key: string): void {
+    start(
+      modal: VueConstructor,
+      key: string,
+      payload: any,
+      onComplete: (result: any) => void,
+      onCancel: (reason: any) => void
+    ): void {
       const flowKey = key + this.modals.length;
       this.modals.push(
-        new KeyedModal(flowKey, modal)
+        new KeyedModal(flowKey, modal, payload, onComplete, onCancel)
         )
       window.history.pushState(
         { flowKey },
         ''
       );
       window.onpopstate = ({ state } : any) => {
-        console.log(state);
         if (state == null) {
           this.modals = [];
         }
@@ -107,8 +130,13 @@ export default {
         }
       }
     },
-    cancel(): void {
-      window.history.back()
+    cancel(reason: any, callback?: (reason: any) => void): void {
+      window.history.back();
+      if (callback) callback(reason);
+    },
+    complete(result: any, callback?: (result: any) => void): void {
+      window.history.back();
+      if (callback) callback(result);
     },
     shouldHide(index = -1): boolean {
       return this.$flows._hideCovered && this.modals.length > index + 1;
@@ -116,7 +144,7 @@ export default {
   },
   data: () => {
     return {
-      modals: [] as VueConstructor[],
+      modals: [] as KeyedModal[],
     }
   }
 } as ComponentOptions<IFlowsRoot>;

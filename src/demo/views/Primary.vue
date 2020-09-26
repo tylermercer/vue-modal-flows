@@ -8,11 +8,19 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { blackKey } from './../custom-flows'
 
 @Component({})
 export default class Primary extends Vue {
-  doTheThingZhuLi(): void {
-    this.$flows.start('black')
+  public doTheThingZhuLi() {
+    console.log(blackKey);
+    this.$flows.start(blackKey, 17, this.handleResult, this.handleCancel);
+  }
+  public handleResult(result: string) {
+    console.log(result);
+  }
+  public handleCancel() {
+
   }
 }
 </script>

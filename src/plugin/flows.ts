@@ -1,8 +1,8 @@
 import { IFlowsRoot } from './flows-root';
 import { VueConstructor } from 'vue';
 
-export type Flow<TPayload = any,TResult = any> = {
-  key: FlowKey<TPayload,TResult> | string;
+export type Flow<TPayload = never,TResult = never,TCancelReason = never> = {
+  key: FlowKey<TPayload,TResult,TCancelReason> | string;
   component: VueConstructor;
 }
 
@@ -16,8 +16,10 @@ const defaultOptions: FlowsOptions = {
   flows: []
 }
 
-export class FlowKey<TPayload,TResult> {
-  constructor(public value: string) {}
+export class FlowKey<TPayload=never,TResult=never,TCancelReason=never> {
+  constructor(public label: string) {
+    return { label }
+  }
 }
 
 export default class Flows {
@@ -29,15 +31,14 @@ export default class Flows {
     const resOptions = { ...defaultOptions, ...options };
     this._hideCovered = resOptions.hideCovered;
     this.flows = resOptions.flows;
-    console.log(this.flows);
   }
 
 
-  public start<TPayload,TResult>(
-      key: FlowKey<TPayload,TResult> | string,
-      // payload: TPayload,
-      // onfinish: (result: TResult) => void,
-      // oncancel: () => void
+  public start<TPayload,TResult,TCancelReason>(
+      key: FlowKey<TPayload,TResult,TCancelReason> | string,
+      payload?: TPayload,
+      onComplete?: (result: TResult) => void,
+      onCancel?: (reason: TCancelReason) => void
     ) {
     if (this.root == null) {
       console.error("No root attached")
@@ -50,7 +51,12 @@ export default class Flows {
       else {
         console.log("Starting: " + flow.key);
         //@ts-ignore
-        this.root!.start(flow.component, typeof flow.key === 'string' ? flow.key : flow.key.value)
+        this.root!.start(
+          flow.component,
+          typeof flow.key === 'string' ? flow.key : flow.key.label,
+          payload,
+          onComplete,
+          onCancel)
       }
     }
   }
