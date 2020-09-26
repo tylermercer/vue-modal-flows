@@ -7,8 +7,7 @@ class KeyedModal {
     public key: string,
     public flow: Flow,
     public payload: any,
-    public onComplete: (result: any) => void,
-    public onCancel: (result: any) => void
+    public onClose: (result: any) => void
   ){}
   public focusTrap?: FocusTrap;
 }
@@ -52,8 +51,13 @@ export interface IFlowsRoot extends Vue {
   $flows: Flows;
   modals: KeyedModal[];
   shouldHide: (n?: number) => boolean;
-  cancel: (reason: any, callback: (reason: any) => void) => void;
-  complete: (result: any, callback: (reason: any) => void) => void;
+  close: (reason: any, callback: (reason: any) => void) => void;
+  start: (
+    modal: Flow,
+    key: string,
+    payload: any,
+    onClose: (result: any) => void
+  ) => void
 }
 export default {
   render(h: CreateElement): VNode {
@@ -65,8 +69,7 @@ export default {
           },
           style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
           on: {
-            'cancel-flow': (reason: any) => (this as IFlowsRoot).cancel(reason, m.onCancel),
-            'complete-flow': (result: any) => (this as IFlowsRoot).complete(result, m.onComplete)
+            'close-flow': (reason: any) => (this as IFlowsRoot).close(reason, m.onClose)
           },
           props: {
             payload: m.payload
@@ -114,12 +117,11 @@ export default {
       modal: Flow,
       key: string,
       payload: any,
-      onComplete: (result: any) => void,
-      onCancel: (reason: any) => void
+      onClose: (result: any) => void
     ): void {
       const flowKey = key + this.modals.length;
       this.modals.push(
-        new KeyedModal(flowKey, modal, payload, onComplete, onCancel)
+        new KeyedModal(flowKey, modal, payload, onClose)
         )
       window.history.pushState(
         { flowKey },
@@ -162,13 +164,9 @@ export default {
         }
       })
     },
-    cancel(reason: any, callback?: (reason: any) => void): void {
+    close(reason: any, callback?: (reason: any) => void): void {
       window.history.back();
       if (callback) callback(reason);
-    },
-    complete(result: any, callback?: (result: any) => void): void {
-      window.history.back();
-      if (callback) callback(result);
     },
     shouldHide(index = -1): boolean {
       return this.$flows._hideCovered && this.modals.length > index + 1;

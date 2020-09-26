@@ -18,7 +18,7 @@ export default class MyRedComponent extends Vue {
     this.$flows.start(blackKey)
   }
   cancel(): void {
-    this.$emit('cancel-flow')
+    this.$emit('close-flow')
   }
 }
 </script>

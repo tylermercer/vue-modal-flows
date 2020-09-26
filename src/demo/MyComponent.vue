@@ -31,14 +31,15 @@ export default class MyComponent extends Vue {
   public created() {
   }
 
-  another(): void {
-    this.$flows.start('red')
+  async another(): Promise<void> {
+    await this.$flows.start('red', 'foo')
+    console.log("Red modal (launched from multiply modal) was closed");
   }
   cancel(): void {
-    this.$emit('cancel-flow')
+    this.$emit('close-flow')
   }
   confirm(): void {
-    this.$emit('complete-flow', this.multiplier * this.payload!);
+    this.$emit('close-flow', this.multiplier * this.payload!);
   }
 }
 </script>
