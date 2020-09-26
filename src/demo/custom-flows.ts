@@ -1,17 +1,17 @@
 import { Flow, FlowKey } from '../plugin'
-import MyComponent from './MyComponent.vue'
-import MyRedComponent from './MyRedComponent.vue'
+import MultiplierFlow from './MultiplierFlow.vue'
+import RedFlow from './RedFlow.vue'
 
-export const blackKey = new FlowKey<number,number>('black');
+export const multiplyKey = new FlowKey<number,number>('black');
 
 const flows: Flow[] = [
   {
-    key: blackKey,
-    component: MyComponent
+    key: multiplyKey,
+    component: MultiplierFlow
   },
   {
     key: 'red',
-    component: MyRedComponent
+    component: RedFlow
   }
 ]
 

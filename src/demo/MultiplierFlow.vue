@@ -9,7 +9,7 @@
     </p>
     <p>
       <button @click="confirm">Multiply</button>
-      <button @click="another">Start Red Modal!</button>
+      <button @click="another">Start Red Flow!</button>
       <button @click="cancel">Cancel</button>
     </p>
   </section>
@@ -22,7 +22,7 @@ import {Prop} from 'vue-property-decorator'
 
 // The @Component decorator indicates the class is a Vue component
 @Component({})
-export default class MyComponent extends Vue {
+export default class MultiplierFlow extends Vue {
   @Prop()
   public payload?: number;
 
@@ -33,7 +33,7 @@ export default class MyComponent extends Vue {
 
   async another(): Promise<void> {
     await this.$flows.start('red', 'foo')
-    console.log("Red modal (launched from multiply modal) was closed");
+    console.log("Red flow (launched from multiply flow) was closed");
   }
   cancel(): void {
     this.$emit('close-flow')

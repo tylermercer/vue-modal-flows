@@ -15,7 +15,7 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
-import { blackKey } from './../custom-flows'
+import { multiplyKey } from './../custom-flows'
 
 @Component({})
 export default class Primary extends Vue {
@@ -23,7 +23,7 @@ export default class Primary extends Vue {
 
   public async doTheThingZhuLi() {
     const result: number = await this.$flows.start(
-      blackKey, //The type of this FlowKey allows TypeScript to infer the return and payload types
+      multiplyKey, //The type of this FlowKey allows TypeScript to infer the return and payload types
       this.value
     );
     if (result != null) {
