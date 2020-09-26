@@ -1,5 +1,5 @@
 import Vue, { VueConstructor, CreateElement, VNode, ComponentOptions } from 'vue';
-import Flows from './Flows'
+import Flows from './flows'
 
 class KeyedModal {
   constructor(
