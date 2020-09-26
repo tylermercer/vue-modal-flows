@@ -3,6 +3,7 @@ import { VueConstructor } from 'vue';
 
 export type Flow<TPayload = never,TResult = never,TCancelReason = never> = {
   key: FlowKey<TPayload,TResult,TCancelReason> | string;
+  noFocusTrap?: boolean;
   component: VueConstructor;
 }
 
@@ -61,7 +62,7 @@ export default class Flows {
         console.log("Starting: " + flow.key);
         //@ts-ignore
         this.root!.start(
-          flow.component,
+          flow,
           typeof flow.key === 'string' ? flow.key : flow.key.label,
           payload,
           onComplete,

@@ -1,11 +1,11 @@
 import Vue, { VueConstructor, CreateElement, VNode, ComponentOptions } from 'vue';
-import Flows from './flows'
+import Flows, { Flow } from './flows'
 import { createFocusTrap, FocusTrap } from 'focus-trap'
 
 class KeyedModal {
   constructor(
     public key: string,
-    public flow: VueConstructor,
+    public flow: Flow,
     public payload: any,
     public onComplete: (result: any) => void,
     public onCancel: (result: any) => void
@@ -57,6 +57,24 @@ export interface IFlowsRoot extends Vue {
 }
 export default {
   render(h: CreateElement): VNode {
+    const renderedFlows = (this as IFlowsRoot).modals!.map(
+      (m:KeyedModal, i:number) => h(m.flow.component,
+        {
+          attrs: {
+            'data-flow-layer': i
+          },
+          style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
+          on: {
+            'cancel-flow': (reason: any) => (this as IFlowsRoot).cancel(reason, m.onCancel),
+            'complete-flow': (result: any) => (this as IFlowsRoot).complete(result, m.onComplete)
+          },
+          props: {
+            payload: m.payload
+          }
+        }
+      )
+    )
+
     return h('div',
       { style: { rootElementStyles } },
       [
@@ -68,23 +86,7 @@ export default {
           },
           (this as IFlowsRoot).$slots.default
         ),
-        ...(this as IFlowsRoot).modals!.map(
-          (m:KeyedModal, i:number) => h(m.flow,
-            {
-              attrs: {
-                'data-flow-layer': i
-              },
-              style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
-              on: {
-                'cancel-flow': (reason: any) => (this as IFlowsRoot).cancel(reason, m.onCancel),
-                'complete-flow': (result: any) => (this as IFlowsRoot).complete(result, m.onComplete)
-              },
-              props: {
-                payload: m.payload
-              }
-            }
-          )
-        )
+        ...renderedFlows
       ]
     )
   },
@@ -108,7 +110,7 @@ export default {
   },
   methods: {
     start(
-      modal: VueConstructor,
+      modal: Flow,
       key: string,
       payload: any,
       onComplete: (result: any) => void,
@@ -139,6 +141,7 @@ export default {
       }
       this.$nextTick(() => {
         let lastModal = this.modals[this.modals.length-1]
+        if (lastModal.flow.noFocusTrap) return;
 
         let n = this.modals.length - 1
         let el = document.querySelector(`*[data-flow-layer='${n}']`)
