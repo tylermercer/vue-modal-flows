@@ -1,6 +1,6 @@
 <template>
   <p class="foobar">
-  <button @click="another">Start Black Modal</button>
+  <button @click="another">Start Multiply Modal</button>
   <button @click="cancel">Cancel</button>
   Modals within modals!
   </p>
@@ -9,12 +9,13 @@
 <script lang="ts">
 import Vue from 'vue'
 import Component from 'vue-class-component'
+import { blackKey } from './custom-flows'
 
 // The @Component decorator indicates the class is a Vue component
 @Component({})
 export default class MyRedComponent extends Vue {
   another(): void {
-    this.$flows.start('black')
+    this.$flows.start(blackKey)
   }
   cancel(): void {
     this.$emit('cancel-flow')
@@ -24,8 +25,7 @@ export default class MyRedComponent extends Vue {
 
 <style scoped>
 .foobar {
-  background-color: rgba(255,0,0,0.2);
-  color: red;
+  background-color: rgba(255,127,127,0.8);
   margin: 0;
 }
 </style>

@@ -1,7 +1,14 @@
 <template>
   <div>
     <h2>Primary route</h2>
-    <p><button @click="doTheThingZhuLi">Start Black Modal</button></p>
+    <p>
+      <button @click="doTheThingZhuLi">
+        Start Multiplication Modal
+      </button>
+    </p>
+    <p>
+      {{value}}
+    </p>
   </div>
 </template>
 
@@ -12,12 +19,19 @@ import { blackKey } from './../custom-flows'
 
 @Component({})
 export default class Primary extends Vue {
+  value = 7;
+
   public doTheThingZhuLi() {
     console.log(blackKey);
-    this.$flows.start(blackKey, 17, this.handleResult, this.handleCancel);
+    this.$flows.start(
+      blackKey,
+      this.value,
+      this.handleResult,
+      this.handleCancel
+    );
   }
-  public handleResult(result: string) {
-    console.log(result);
+  public handleResult(result: number) {
+    this.value = result;
   }
   public handleCancel() {
 
