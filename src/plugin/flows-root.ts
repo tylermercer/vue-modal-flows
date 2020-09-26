@@ -1,5 +1,6 @@
 import Vue, { VueConstructor, CreateElement, VNode, ComponentOptions } from 'vue';
 import Flows from './flows'
+import { createFocusTrap, FocusTrap } from 'focus-trap'
 
 class KeyedModal {
   constructor(
@@ -9,6 +10,7 @@ class KeyedModal {
     public onComplete: (result: any) => void,
     public onCancel: (result: any) => void
   ){}
+  public focusTrap?: FocusTrap;
 }
 
 const rootElementStyles = {
@@ -69,6 +71,9 @@ export default {
         ...(this as IFlowsRoot).modals!.map(
           (m:KeyedModal, i:number) => h(m.flow,
             {
+              attrs: {
+                'data-flow-layer': i
+              },
               style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
               on: {
                 'cancel-flow': (reason: any) => (this as IFlowsRoot).cancel(reason, m.onCancel),
@@ -123,12 +128,31 @@ export default {
         }
         else {
           const newTop = this.modals.findIndex(i => i.key === state.flowKey);
+          this.modals.slice(newTop + 1)
+            .forEach(m => m.focusTrap? m.focusTrap.deactivate() : null);
+
           this.modals = this.modals.slice(0, newTop + 1);
         }
         if (!this.modals.length) {
           window.onpopstate = () => {}
         }
       }
+      this.$nextTick(() => {
+        let lastModal = this.modals[this.modals.length-1]
+
+        let n = this.modals.length - 1
+        let el = document.querySelector(`*[data-flow-layer='${n}']`)
+        if (!el) {
+          console.error(
+            `Vue Modal Flows: No \"*[data-flow-layer='${n}']\" found. ` +
+            `Are you manipulating the attributes on your modal's root?`
+          );
+        }
+        else {
+          lastModal.focusTrap = createFocusTrap((el as HTMLElement));
+          lastModal.focusTrap.activate();
+        }
+      })
     },
     cancel(reason: any, callback?: (reason: any) => void): void {
       window.history.back();
