@@ -21,19 +21,14 @@ import { blackKey } from './../custom-flows'
 export default class Primary extends Vue {
   value = 7;
 
-  public doTheThingZhuLi() {
-    this.$flows.start(
-      blackKey,
-      this.value,
-      this.handleResult,
-      this.handleCancel
+  public async doTheThingZhuLi() {
+    const result: number = await this.$flows.start(
+      blackKey, //The type of this FlowKey allows TypeScript to infer the return and payload types
+      this.value
     );
-  }
-  public handleResult(result: number) {
-    this.value = result;
-  }
-  public handleCancel() {
-
+    if (result != null) {
+      this.value = result;
+    }
   }
 }
 </script>

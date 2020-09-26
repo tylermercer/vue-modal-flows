@@ -1,8 +1,8 @@
 import { IFlowsRoot } from './flows-root';
 import { VueConstructor } from 'vue';
 
-export type Flow<TPayload = never,TResult = never,TCancelReason = never> = {
-  key: FlowKey<TPayload,TResult,TCancelReason> | string;
+export type Flow<TPayload = any,TResult = any> = {
+  key: FlowKey<TPayload,TResult> | string;
   noFocusTrap?: boolean;
   component: VueConstructor;
 }
@@ -17,7 +17,7 @@ const defaultOptions: FlowsOptions = {
   flows: []
 }
 
-export class FlowKey<TPayload=never,TResult=never,TCancelReason=never> {
+export class FlowKey<TPayload,TResult> {
   /*
    * These three data members exist so that using the wrong
    * handler types when invoking a flow will cause
@@ -27,7 +27,6 @@ export class FlowKey<TPayload=never,TResult=never,TCancelReason=never> {
    */
   private unusedPayload?: TPayload
   private unusedResult?: TResult
-  private unusedCancelReason?: TCancelReason
 
   constructor(public label: string) {}
 }
@@ -43,15 +42,12 @@ export default class Flows {
     this.flows = resOptions.flows;
   }
 
-
-  public start<TPayload,TResult,TCancelReason>(
-      key: FlowKey<TPayload,TResult,TCancelReason> | string,
-      payload?: TPayload,
-      onComplete?: (result: TResult) => void,
-      onCancel?: (reason: TCancelReason) => void
-    ) {
+  public start<TPayload,TResult>(
+      key: FlowKey<TPayload,TResult> | string,
+      payload?: TPayload
+    ): Promise<TResult> {
     if (this.root == null) {
-      console.error("No root attached")
+      throw new Error("No root attached")
     }
     else {
       const flow = this.flows.find(f => f.key === key);
@@ -59,13 +55,19 @@ export default class Flows {
         throw new Error("Unknown flow! " + key);
       }
       else {
-        //@ts-ignore
-        this.root!.start(
-          flow,
-          typeof flow.key === 'string' ? flow.key : flow.key.label,
-          payload,
-          onComplete,
-          onCancel)
+        const keyStr: string = typeof flow.key === 'string' ? flow.key : flow.key.label;
+        return new Promise((resolve, reject) => {
+          try {
+            this.root!.start(
+              flow,
+              keyStr,
+              payload,
+              resolve)
+          }
+          catch (e) {
+            reject(e)
+          }
+        })
       }
     }
   }
