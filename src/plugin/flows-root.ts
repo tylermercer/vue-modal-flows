@@ -131,7 +131,16 @@ export default {
         else {
           const newTop = this.modals.findIndex(i => i.key === state.flowKey);
           this.modals.slice(newTop + 1)
-            .forEach(m => m.focusTrap? m.focusTrap.deactivate() : null);
+            .forEach(m => {
+              console.log("Deactivating focus trap.", m.focusTrap);
+              if (m.focusTrap) {
+                m.focusTrap.deactivate()
+              }
+              else {
+                console.log("No focus trap");
+              }
+              debugger;
+            });
 
           this.modals = this.modals.slice(0, newTop + 1);
         }
