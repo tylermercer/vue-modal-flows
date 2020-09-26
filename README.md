@@ -1,6 +1,11 @@
 # Vue Modal Flows
 A Vue plugin for managing modal flows in Vue. Note that these flows are not necessarily modal *dialogs* (hence why they're referred to as "flows" in this library). A modal flow is one where the user cannot switch to another part of the application and then return--the user must either finish the task represented by the modal flow, or cancel it.
 
+See
+[this article](https://uxplanet.org/modality-the-one-ux-concept-you-need-to-understand-when-designing-intuitive-user-interfaces-e5e941c7acb1)
+for an excellent discussion of modality and its value
+in creating intuitive user experiences.
+
 ## Usage
 
 ### Setup
@@ -47,39 +52,35 @@ future.
 Flows are just Vue components. They may optionally do any
 of the following:
 * Expose a `payload` prop to take info from the flow callee.
-* Emit a `'complete-flow'` event to indicate that the flow
+* Emit a `'close-flow'` event to indicate that the flow
 is complete and should close. This event can take a value
-(the flow result) that is passed to the callee via a
-callback.
-* Emit a `'cancel-flow'` event to indicate that the flow
-has been cancelled and should close. This event can take a
-value (the cancellation reason) that is passed to the
-callee via a callback.
+(the flow result) that is returned to the callee as the Promise result (see below).
+
+Note: the recommended practice is to include a value with
+the 'close-flow' event when the task associated with the
+flow is completed, and include no value when the task is
+cancelled. See
+[MultiplierFlow.vue](/src/demo/MultiplierFlow.vue)
+for an example of this.
 
 ### Starting a flow
 
-Starting a flow is as simple as invoking `$flows.start`.
+Starting a flow is as simple as calling `$flows.start`.
 The method accepts the flow key, an optional payload, and
-optional onComplete and onCancel callbacks.
+returns a promise that resolves when the flow returns a
+result.
 
 For example:
 
-```
+```js
 //Inside component's method block
-exampleFunction() {
-  this.$flows.start(
+async exampleFunction() {
+  const result = await this.$flows.start(
     'example-flow-key',
-    { 'this is': 'a payload' },
-    this.handleResult,
-    this.handleCancel
+    { 'this is': 'a payload' }
   )
+  console.log(result);
 },
-handleResult(result) {
-  //Do something
-},
-handleCancel(reason) {
-  //Do something else
-}
 ```
 
 ## Q & A
