@@ -29,7 +29,6 @@ export default class MyComponent extends Vue {
   multiplier = 1;
 
   public created() {
-    console.log(this.payload);
   }
 
   another(): void {

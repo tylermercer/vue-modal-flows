@@ -59,7 +59,6 @@ export default class Flows {
         throw new Error("Unknown flow! " + key);
       }
       else {
-        console.log("Starting: " + flow.key);
         //@ts-ignore
         this.root!.start(
           flow,
