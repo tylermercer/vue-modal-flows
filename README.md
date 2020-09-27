@@ -93,21 +93,28 @@ cancelled or completed.
 flow is completed or cancelled. The `oncomplete` callback can
 receive a result from the modal flow.
 
-### How do I associate a specific URL with a modal?
+### How do I associate a specific URL with a flow?
 My recommendation is to set vue-router to use
 [history mode](https://router.vuejs.org/guide/essentials/history-mode.html)
 and then use `window.location.hash` to set the URL hash when
-loading the modal. To handle loading that modal when going
+loading the flow. To handle loading that flow when going
 directly to its URL, check if there's a hash when you load
-the page. If there is, open the associated modal. (This can
+the page. If there is, open the associated flow. (This can
 be done in your route component's `created` function, for
 example.)
 
-### How do I navigate to another route from within a modal?
-**I know I'm not supposed to but I really really want to**
-If for whatever reason you need to navigate to another route
-from inside a modal, my recommendation is to close the modal
-(and any parent modals) and do the navigation from the
+### How do I navigate to another route from within a flow?
+Go read
+[this article on modality](https://uxplanet.org/modality-the-one-ux-concept-you-need-to-understand-when-designing-intuitive-user-interfaces-e5e941c7acb1).
+Navigating to another route from inside a flow breaks that
+flow's modality. Consider restructuring your application
+so that modality is used correctly. Your users will thank you.
+🙂
+
+If for whatever reason you are still convinced you need to
+navigate to another route from inside a flow, my recommendation
+is to close the flow (and any parent flows) using a
+`'close-flow'` event(s) and do the navigation from the non-flow
 component that launched it.
 
 ## Development
