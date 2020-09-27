@@ -62,20 +62,26 @@ export interface IFlowsRoot extends Vue {
 export default {
   render(h: CreateElement): VNode {
     const renderedFlows = (this as IFlowsRoot).modals!.map(
-      (m:KeyedModal, i:number) => h(m.flow.component,
-        {
+      (m:KeyedModal, i:number) =>  {
+        const isLast = i === (this as IFlowsRoot).modals!.length - 1
+
+        const options = {
           attrs: {
             'data-flow-layer': i
           },
           style: (this as IFlowsRoot).shouldHide(i) ? coveredStyles : modalStyles,
           on: {
-            'close-flow': (reason: any) => (this as IFlowsRoot).close(reason, m.onClose)
+            'close-flow': isLast?
+              (reason: any) => (this as IFlowsRoot).close(reason, m.onClose) :
+              () => { throw new Error('non-top modal tried to close') }
           },
           props: {
             payload: m.payload
           }
         }
-      )
+
+        return h(m.flow.component, options)
+      }
     )
 
     return h('div',
